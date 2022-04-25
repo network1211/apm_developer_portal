@@ -1,3 +1,6 @@
+# The original irule was developed by Joe Pruitt.
+# https://community.f5.com/t5/crowdsrc/session-table-control/ta-p/282248
+
 when HTTP_REQUEST {
   set APPNAME "subtables";
   
