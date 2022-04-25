@@ -1,0 +1,15 @@
+when HTTP_REQUEST { 
+    if { ([HTTP::header exists "Authorization"]) && ([string length [HTTP::header value Authorization]] eq "20")} { 
+        set header [HTTP::header value Authorization]
+        set length [string length [HTTP::header value Authorization]]
+        set compare [table lookup -subtable "api_key_table" $header]
+        log local0. "$header / $length / $compare"
+        if { [table lookup -subtable "api_key_table" $header] == "" } { 
+            reject
+            return
+            } elseif { [table lookup -subtable "api_key_table" $header] != "" } {
+                return
+            }
+    log local0. "$header" } else { 
+            HTTP::respond 401 }
+}
