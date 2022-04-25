@@ -1,0 +1,32 @@
+# The original irule was created by 'Jason Rahm'. 
+# https://community.f5.com/t5/crowdsrc/random-string-generators/ta-p/286104
+
+when CLIENT_ACCEPTED {
+  set key [call library::randomNumberLetterGenerator 20]
+  set value "[IP::client_addr]:[TCP::client_port]"
+  set tbl "api_key_table"
+  set now [clock seconds]
+  set nowformatted [clock format $now]
+  set expire [expr {$now+60}]
+  set expireformatted [clock format $expire]
+  
+  table set -subtable $tbl $key $value indefinite 60
+  
+  #log local0. "Random Strings: $key / $value / $tbl / $nowformatted / $expireformatted"
+}
+
+when HTTP_REQUEST {
+  set response "<html>
+         <head>
+            <title> Time-limited API Key Generating </title>
+         </head>
+         <body>
+            This is your one-time API access Key: $key <br>
+            The current time is $nowformatted <br>
+            The key will be expired at $expireformatted
+         </body>
+      </html>"
+      
+  HTTP::respond 200 content $response
+#  log local0. "$response"
+}
