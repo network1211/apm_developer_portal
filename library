@@ -1,0 +1,10 @@
+# iRule proc Source - Define the proc named html_encode in a separate iRule named library:
+proc randomNumberLetterGenerator {length {chars "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"}} {
+  set range [expr {[string length $chars]-1}]
+  set txt ""
+  for {set i 0} {$i < $length} {incr i} {
+    set pos [expr {int(rand()*$range)}]
+    append txt [string range $chars $pos $pos]
+  }
+  return $txt
+}
